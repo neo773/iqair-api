@@ -1,45 +1,104 @@
-# IQAir API
+# iqair-api
 
-A simple proxy API for scraping air quality data from IQAir.com stations.
+Fully typed TypeScript SDK for scraping IQAir air quality data.
 
-## API Routes
+## Installation
 
-### `GET /`
+```bash
+bun add iqair-api
+```
 
-Returns basic API info and available endpoints.
+## Usage
 
-### `GET /aqi`
+```typescript
+import { createIQAirClient } from "iqair-api";
 
-Get the current AQI for the nearest station to a location.
+const client = createIQAirClient();
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `lat` | Yes | Latitude |
-| `lng` | Yes | Longitude |
-| `source` | No | Data source slug (defaults to `central-pollution-control-board`) |
+async function main() {
+  const dataSource = "central-pollution-control-board";
 
-### `GET /stations`
+  const stations = await client.getStations({ dataSource });
+  console.log(`Found ${stations.length} stations`);
 
-List all cached stations for a data source.
+  const nearest = await client.getNearestStation({
+    lat: 28.6139,
+    lng: 77.209,
+    dataSource,
+  });
+  console.log("Nearest station:", nearest);
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `source` | No | Data source slug |
-| `refresh` | No | Set to `true` to force refresh the cache |
+  if (nearest) {
+    const aqi = await client.getStationAQI({ stationUrl: nearest.url });
+    console.log("Station AQI:", aqi);
+  }
 
-### `GET /stations/nearest`
+  const locationAQI = await client.getAQIForLocation({
+    lat: 28.6139,
+    lng: 77.209,
+    dataSource,
+  });
+  console.log("Location AQI:", locationAQI);
+}
 
-Find the nearest stations to a location.
+main().catch(console.error);
+```
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `lat` | Yes | Latitude |
-| `lng` | Yes | Longitude |
-| `source` | No | Data source slug |
-| `limit` | No | Number of stations to return (default: 5) |
+## API
 
-### `GET /station/*`
+### `createIQAirClient(config?)`
 
-Get the current AQI for a specific station by its URL path.
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `baseUrl` | `string` | No | IQAir base URL (default: `https://www.iqair.com`) |
+| `locale` | `string` | No | Locale path segment (default: `in-en`) |
+| `userAgent` | `string` | No | Custom user agent string |
 
-Example: `/station/india/maharashtra/mumbai/bandra`
+### Methods
+
+| Method | Description |
+|--------|-------------|
+| `getStations(params)` | Get all stations for a data source |
+| `getStationAQI(params)` | Get AQI data for a specific station |
+| `getNearestStation(params)` | Find the nearest station to coordinates |
+| `getNearestStations(params)` | Find nearest stations to coordinates (sorted) |
+| `getAQIForLocation(params)` | Get AQI for the nearest station to coordinates |
+
+### Types
+
+```typescript
+import type {
+  Station,
+  StationWithDistance,
+  StationDetails,
+  StationItem,
+  AQIResponse,
+  CurrentConditions,
+  Pollutant,
+  HistoricalDataPoint,
+  ForecastItem,
+  GetStationsParams,
+  GetStationAQIParams,
+  GetNearestStationParams,
+  GetNearestStationsParams,
+  GetAQIForLocationParams,
+} from "iqair-api";
+```
+
+## Development
+
+```bash
+bun install
+bun run build
+bun test
+bun test:unit
+bun test:e2e
+```
+
+## License
+
+MIT
+
+## Disclaimer
+
+This is an **unofficial** API client and is not affiliated with, endorsed by, or associated with IQAir or its parent organization. This package is provided for educational and informational purposes under fair use. Accessing publicly available air quality data is lawful and serves the public interest.

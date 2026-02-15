@@ -1,4 +1,5 @@
 import { UNSAFE_decodeViaTurboStream } from "react-router";
+import { IQAirException } from "../exceptions";
 
 async function resolveAllPromises<T>(obj: T): Promise<T> {
   if (obj instanceof Promise) {
@@ -31,22 +32,26 @@ export async function decodeTurboStream<T>(
   return resolved as T;
 }
 
-export async function fetchAndDecode<T>(url: string): Promise<T> {
+export async function fetchAndDecode<T>(url: string, userAgent: string): Promise<T> {
   const response = await fetch(url, {
     headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+      "User-Agent": userAgent,
       Accept: "*/*",
       "Accept-Language": "en-US,en;q=0.9",
     },
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const text = await response.text();
+    throw new IQAirException(
+      `Request failed: ${response.status} ${response.statusText}`,
+      response.status,
+      text
+    );
   }
 
   if (!response.body) {
-    throw new Error("Response body is null");
+    throw new IQAirException("Response body is null", 500);
   }
 
   return decodeTurboStream<T>(response.body);

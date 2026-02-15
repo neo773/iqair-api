@@ -1,21 +1,48 @@
 {
   "name": "iqair-api",
-  "version": "1.0.0",
-  "private": true,
+  "type": "module",
+  "version": "1.0.1",
+  "description": "Fully typed TypeScript SDK for scraping IQAir air quality data",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neo773/iqair-api.git"
+  },
+  "author": "neo773",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "build": "tsdown src/index.ts",
+    "dev": "tsdown src/index.ts --watch",
+    "test": "bun test",
+    "test:unit": "bun test tests/unit",
+    "test:e2e": "bun test tests/e2e",
     "typecheck": "tsc --noEmit"
   },
+  "keywords": [
+    "iqair",
+    "air-quality",
+    "aqi",
+    "pollution",
+    "pm25",
+    "api",
+    "sdk"
+  ],
+  "license": "MIT",
   "dependencies": {
-    "hono": "^4.6.0",
-    "react-router": "^7.12.0",
-    "turbo-stream": "2.4.0"
+    "react-router": "^7.6.1",
+    "turbo-stream": "^2.4.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241112.0",
-    "@types/bun": "^1.3.6",
-    "typescript": "^5.6.0",
-    "wrangler": "^3.90.0"
+    "@types/bun": "^1.3.8",
+    "tsdown": "^0.18.1",
+    "typescript": "^5.9.3"
   }
 }

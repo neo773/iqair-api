@@ -1,4 +1,4 @@
-import type { CachedStation, StationWithDistance } from "../types";
+import type { Station, StationWithDistance } from "../types";
 
 const EARTH_RADIUS_KM = 6371;
 
@@ -30,7 +30,7 @@ export function haversineDistance(
 export function findNearestStation(
   latitude: number,
   longitude: number,
-  stations: CachedStation[]
+  stations: Station[]
 ): StationWithDistance | null {
   if (stations.length === 0) {
     return null;
@@ -59,7 +59,7 @@ export function findNearestStation(
 export function findNearestStations(
   latitude: number,
   longitude: number,
-  stations: CachedStation[],
+  stations: Station[],
   limit: number = 5
 ): StationWithDistance[] {
   const withDistances: StationWithDistance[] = stations.map((station) => ({

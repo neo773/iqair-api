@@ -5,7 +5,7 @@
   "description": "Fully typed TypeScript SDK for scraping IQAir air quality data",
   "repository": {
     "type": "git",
-    "url": "https://github.com/neo773/iqair-api.git"
+    "url": "git+https://github.com/neo773/iqair-api.git"
   },
   "author": "neo773",
   "exports": {
@@ -44,5 +44,13 @@
     "@types/bun": "^1.3.8",
     "tsdown": "^0.18.1",
     "typescript": "^5.9.3"
-  }
+  },
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "bugs": {
+    "url": "https://github.com/neo773/iqair-api/issues"
+  },
+  "homepage": "https://github.com/neo773/iqair-api#readme"
 }

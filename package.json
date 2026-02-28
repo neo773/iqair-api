@@ -1,7 +1,7 @@
 {
   "name": "iqair-api",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Fully typed TypeScript SDK for scraping IQAir air quality data",
   "repository": {
     "type": "git",
